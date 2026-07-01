@@ -1,4 +1,101 @@
->>INHERITANCE
+>> INHERITANCE
 
-    "is a" relationship
+    "is a" relationship    : eg horse is an animal
     a derived class inherit from base class
+    f S is a subtype of T, then replacing objects of type T with objects of type S doesn’t change the program’s behavior.
+
+
+>> COMPOSITION
+
+    "has a" relationship    : eg horse has a tail
+    class Composite can contain an object of another class Component
+
+
+>> Python supports multiple inheritance 
+>> Every class inherits from object except class used to indicate error
+
+>> EXCEPTION CLASS 
+
+    class AnError(Exception):       #inherits from Exception
+        pass                        #for now keeping the class empty
+
+    raise AnError()                 #we raise a exception class
+
+
+
+
+>> in a file hr write the following code
+
+
+class Employee:
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
+
+
+class SalaryEmployee(Employee):
+    def __init__(self, id, name, weekly_salary):
+        super().__init__(id, name)
+        self.weekly_salary = weekly_salary
+
+    def calculate_payroll(self):
+        return self.weekly_salary
+
+
+class HourlyEmployee(Employee):
+    def __init__(self, id, name, hours_worked, hourly_rate):
+        super().__init__(id, name)
+        self.hours_worked = hours_worked
+        self.hourly_rate = hourly_rate
+
+    def calculate_payroll(self):
+        return self.hours_worked * self.hourly_rate
+
+
+class CommissionEmployee(SalaryEmployee):
+    def __init__(self, id, name, weekly_salary, commission):
+        super().__init__(id, name, weekly_salary)
+        self.commission = commission
+
+    def calculate_payroll(self):
+        fixed = super().calculate_payroll()
+        return fixed + self.commission
+
+class PayrollSystem:                                                                    #this is kinda interface where
+    def calculate_payroll(self, employees):
+        print("Calculating Payroll")
+        print("===================")
+        for employee in employees:
+            print(f"Payroll for: {employee.id} - {employee.name}")
+            print(f"- Check amount: {employee.calculate_payroll()}")
+            print("")
+
+
+>> in a file program.py write0
+
+import hr
+
+salary_employee = hr.SalaryEmployee(1, "John Smith", 1500)
+hourly_employee = hr.HourlyEmployee(2, "Jane Doe", 40, 15)
+commission_employee = hr.CommissionEmployee(3, "Kevin Bacon", 1000, 250)
+
+payroll_system = hr.PayrollSystem()
+payroll_system.calculate_payroll(
+    [salary_employee, hourly_employee, commission_employee]
+)
+
+
+
+>> Expected outcome
+
+
+Calculating Payroll
+===================
+Payroll for: 1 - John Smith
+- Check amount: 1500
+
+Payroll for: 2 - Jane Doe
+- Check amount: 600
+
+Payroll for: 3 - Kevin Bacon
+- Check amount: 1250
