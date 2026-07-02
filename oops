@@ -259,4 +259,4 @@ hence composition is more flexible.....
 
     - generally we use composition
     - if you’re able to justify an inheritance relationship between two classes both ways, then you shouldn’t derive one class from another. eg rectangle square resize() case
-    - 
+    
