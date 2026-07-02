@@ -9,9 +9,12 @@
 
     "has a" relationship    : eg horse has a tail
     class Composite can contain an object of another class Component
+    
 
 
->> Python supports multiple inheritance 
+    ####################INHERITANCE########################
+
+>> Python supports multiple inheritance which is reallu useful
 >> Every class inherits from object except class used to indicate error
 
 >> EXCEPTION CLASS 
@@ -99,3 +102,161 @@ Payroll for: 2 - Jane Doe
 
 Payroll for: 3 - Kevin Bacon
 - Check amount: 1250
+
+
+
+>> when you inherit from 2 classes in that case by default the init of the first class is used
+    eg : horce(animal , herbivores)   first the objects of animal willbe filled
+
+>> in case of multiple inheritance you can face a lot of problems
+
+>> use __mro__  The MRO shows the order in which Python is going to look for a matching attribute or method
+
+>> You can bypass parts of the MRO by defining the __init__ seperately 
+
+>> in case there is function in both base classes then you can again specify which function you wants to do by def it 
+
+>> generally when you are stuck on the diamond problem try to change the logic
+
+
+
+
+######################COMPOOSITION#####################################
+
+in a file conatacts.py
+
+class Address:
+    def __init__(self, street, city, state, zipcode, street2=""):
+        self.street = street
+        self.street2 = street2
+        self.city = city
+        self.state = state
+        self.zipcode = zipcode
+
+    def __str__(self):                                                                #You implemented .__str__() to provide a pretty representation of an Address
+        lines = [self.street]
+        if self.street2:
+            lines.append(self.street2)
+        lines.append(f"{self.city}, {self.state} {self.zipcode}")
+        return "\n".join(lines)
+
+
+
+now,
+
+>>> from contacts import Address
+>>> address = Address("55 Main St.", "Concord", "NH", "03301")
+>>> print(address)
+55 Main St.
+Concord, NH 03301
+
+
+in file employee.py
+
+
+class Employee:
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
+        self.address = None
+
+(notice that there’s no reference in the employee module to the contacts module)
+(Composition is a loosely coupled relationship that often doesn’t require the composite class to have knowledge of the component.)
+
+
+in hr.py
+
+class PayrollSystem:
+    def calculate_payroll(self, employees):
+        print("Calculating Payroll")
+        print("===================")
+        for employee in employees:
+            print(f"Payroll for: {employee.id} - {employee.name}")
+            print(f"- Check amount: {employee.calculate_payroll()}")
+            if employee.address:
+                print("- Sent to:")
+                print(employee.address)
+            print("")
+
+
+in program.py
+
+import hr
+import employees
+import productivity
+import contacts
+
+manager = employees.Manager(1, "Mary Poppins", 3000)
+manager.address = contacts.Address(
+    "121 Admin Rd", "Concord", "NH", "03301"
+)
+secretary = employees.Secretary(2, "John Smith", 1500)
+secretary.address = contacts.Address(
+    "67 Paperwork Ave.", "Manchester", "NH", "03101"
+)
+sales_guy = employees.SalesPerson(3, "Kevin Bacon", 1000, 250)
+factory_worker = employees.FactoryWorker(4, "Jane Doe", 40, 15)
+temporary_secretary = employees.TemporarySecretary(5, "Robin Williams", 40, 9)
+employees = [
+    manager,
+    secretary,
+    sales_guy,
+    factory_worker,
+    temporary_secretary,
+]
+
+productivity_system = productivity.ProductivitySystem()
+productivity_system.track(employees, 40)
+
+payroll_system = hr.PayrollSystem()
+payroll_system.calculate_payroll(employees)
+
+
+
+
+so here the final output would be 
+
+$ python program.py
+
+Tracking Employee Productivity
+==============================
+Mary Poppins: screams and yells for 40 hours.
+John Smith: expends 40 hours doing office paperwork.
+Kevin Bacon: expends 40 hours on the phone.
+Jane Doe: manufactures gadgets for 40 hours.
+Robin Williams: expends 40 hours doing office paperwork.
+
+Calculating Payroll
+===================
+Payroll for: 1 - Mary Poppins
+- Check amount: 3000
+- Sent to:
+121 Admin Rd
+Concord, NH 03301
+
+Payroll for: 2 - John Smith
+- Check amount: 1500
+- Sent to:
+67 Paperwork Ave.
+Manchester, NH 03101
+
+Payroll for: 3 - Kevin Bacon
+- Check amount: 1250
+
+Payroll for: 4 - Jane Doe
+- Check amount: 600
+
+Payroll for: 5 - Robin Williams
+- Check amount: 360
+
+
+
+hence composition is more flexible.....
+
+
+
+>> What to use ??
+
+    - generally we use composition
+    - if you’re able to justify an inheritance relationship between two classes both ways, then you shouldn’t derive one class from another. eg rectangle square resize() case
+    - 
